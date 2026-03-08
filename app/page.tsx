@@ -86,7 +86,7 @@ export default function Home() {
         alert('Please enter your name and address');
         return;
       }
-      message = ` Name: ${customerName}\n Address: ${customerAddress}\n\n Order Details:\n`;
+      message = `  Name: ${customerName}\n Address: ${customerAddress}\n\n Order Details:\n`;
       cartItems.forEach(item => {
         message += `${item.name} x${item.quantity} (Rs. ${item.price * item.quantity})\n`;
       });

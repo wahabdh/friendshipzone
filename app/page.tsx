@@ -81,12 +81,12 @@ export default function Home() {
       message = `Hi, I'm interested in ordering ${itemName}.`;
     } else {
       cartItems.forEach(item => {
-        message += `${item.name} x${item.quantity} (Rs. ${item.price * item.quantity})\n`;
+        message += `${item.name} x${item.quantity} (₹${item.price * item.quantity})\n`;
       });
-      message += `\nTotal: Rs. ${cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)}`;
+      message += `\nTotal: ₹${cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)}`;
     }
     const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/923069293923?text=${encoded}`, '_blank');
+    window.open(`https://wa.me/923175012196?text=${encoded}`, '_blank');
   };
 
   const handleAdminLogin = async () => {
@@ -155,7 +155,7 @@ export default function Home() {
       {/* Navbar */}
       <nav className="bg-red-600 text-white shadow-lg sticky top-0 z-50">
         <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="text-2xl font-bold and italic">🍔 Nawala (نوالہ)</div>
+          <div className="text-2xl font-bold">🍔 FriendshipZone</div>
           <button
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
             className="md:hidden"
@@ -180,10 +180,10 @@ export default function Home() {
               </>
             )}
 
-            {view !== 'cart' && !adminToken && (
+            {!adminToken && (
               <button
                 onClick={() => { setView('cart'); setMobileMenuOpen(false); }}
-                className="hover:bg-red-700 px-3 py-2 rounded flex items-center gap-2 relative"
+                className="hover:bg-red-700 px-3 py-2 rounded flex items-center gap-2 relative transition"
               >
                 <ShoppingCart size={20} />
                 {cartCount > 0 && (
@@ -226,7 +226,7 @@ export default function Home() {
                       <h3 className="text-xl font-bold text-gray-800">{item.name}</h3>
                       <p className="text-gray-600 text-sm mt-2">{item.description}</p>
                       <div className="flex items-center justify-between mt-4">
-                        <span className="text-2xl font-bold text-red-600">Rs. {item.price}</span>
+                        <span className="text-2xl font-bold text-red-600">₹{item.price}</span>
                         <Button
                           onClick={() => addToCart(item)}
                           className="bg-red-600 hover:bg-red-700 text-white"
@@ -263,7 +263,7 @@ export default function Home() {
                     <Card key={item.id} className="p-4 flex items-center justify-between">
                       <div>
                         <h3 className="font-bold text-gray-800">{item.name}</h3>
-                        <p className="text-gray-600">Rs. {item.price} each</p>
+                        <p className="text-gray-600">₹{item.price} each</p>
                       </div>
                       <div className="flex items-center gap-4">
                         <div className="flex items-center gap-2">
@@ -282,7 +282,7 @@ export default function Home() {
                           </button>
                         </div>
                         <span className="font-bold text-red-600 w-20 text-right">
-                          Rs. {item.price * item.quantity}
+                          ₹{item.price * item.quantity}
                         </span>
                         <button
                           onClick={() => removeFromCart(item.id)}
@@ -297,7 +297,7 @@ export default function Home() {
                 <Card className="p-6 bg-red-50 border-2 border-red-600">
                   <div className="flex justify-between items-center mb-6">
                     <span className="text-xl font-bold text-gray-800">Total:</span>
-                    <span className="text-3xl font-bold text-red-600">Rs. {cartTotal}</span>
+                    <span className="text-3xl font-bold text-red-600">₹{cartTotal}</span>
                   </div>
                   <div className="flex gap-4">
                     <Button

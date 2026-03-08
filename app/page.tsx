@@ -167,7 +167,7 @@ export default function Home() {
 
     {/* Logo */}
     <div className="text-2xl font-bold italic">
-      🍔 FriendshipZone
+      🍔 Nawala (نوالہ)
     </div>
 
     {/* Right side icons */}

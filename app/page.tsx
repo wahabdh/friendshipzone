@@ -161,57 +161,78 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-pink-50">
       {/* Navbar */}
-      <nav className="bg-red-600 text-white shadow-lg sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="text-2xl font-bold and italic">🍔 Nawala (نوالہ)</div>
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden"
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-          <div className={`${mobileMenuOpen ? 'flex' : 'hidden'} md:flex gap-4 flex-col md:flex-row w-full md:w-auto mt-4 md:mt-0 absolute md:static top-16 left-0 right-0 md:top-auto md:left-auto md:right-auto bg-red-600 md:bg-transparent p-4 md:p-0`}>
-            {adminToken && (
-              <>
-                <button
-                  onClick={() => { setView('menu'); setMobileMenuOpen(false); }}
-                  className="hover:bg-red-700 px-3 py-2 rounded transition"
-                >
-                  Menu
-                </button>
-                <button
-                  onClick={() => { setView('admin-dashboard'); setMobileMenuOpen(false); }}
-                  className="hover:bg-red-700 px-3 py-2 rounded transition"
-                >
-                  Dashboard
-                </button>
-              </>
-            )}
+<nav className="bg-red-600 text-white shadow-lg sticky top-0 z-50">
 
-            {!adminToken && (
-              <button
-                onClick={() => { setView('cart'); setMobileMenuOpen(false); }}
-                className="hover:bg-red-700 px-3 py-2 rounded flex items-center gap-2 relative transition"
-              >
-                <ShoppingCart size={20} />
-                {cartCount > 0 && (
-                  <span className="bg-yellow-400 text-red-600 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
-            )}
-            {adminToken && (
-              <button
-                onClick={handleLogout}
-                className="hover:bg-red-700 px-3 py-2 rounded flex items-center gap-2 transition"
-              >
-                <LogOut size={20} /> Logout
-              </button>
-            )}
-          </div>
-        </div>
-      </nav>
+  <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+
+    {/* Logo */}
+    <div className="text-2xl font-bold italic">
+      🍔 FriendshipZone
+    </div>
+
+    {/* Right side icons */}
+    <div className="flex items-center gap-4">
+
+      {/* Cart icon always visible */}
+      {!adminToken && (
+        <button
+          onClick={() => setView('cart')}
+          className="relative hover:bg-red-700 p-2 rounded transition"
+        >
+          <ShoppingCart size={22} />
+
+          {cartCount > 0 && (
+            <span className="absolute -top-2 -right-2 bg-yellow-400 text-red-700 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+              {cartCount}
+            </span>
+          )}
+        </button>
+      )}
+
+      {/* Mobile menu button */}
+      <button
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        className="md:hidden"
+      >
+        {mobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
+      </button>
+
+    </div>
+
+  </div>
+
+  {/* Mobile Menu */}
+  {mobileMenuOpen && (
+    <div className="md:hidden bg-red-600 px-4 pb-4 space-y-2">
+
+      {adminToken && (
+        <>
+          <button
+            onClick={() => { setView('menu'); setMobileMenuOpen(false); }}
+            className="block w-full text-left hover:bg-red-700 px-3 py-2 rounded"
+          >
+            Menu
+          </button>
+
+          <button
+            onClick={() => { setView('admin-dashboard'); setMobileMenuOpen(false); }}
+            className="block w-full text-left hover:bg-red-700 px-3 py-2 rounded"
+          >
+            Dashboard
+          </button>
+
+          <button
+            onClick={() => { setAdminToken(null); setMobileMenuOpen(false); }}
+            className="flex items-center gap-2 hover:bg-red-700 px-3 py-2 rounded"
+          >
+            <LogOut size={18} /> Logout
+          </button>
+        </>
+      )}
+
+    </div>
+  )}
+</nav>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">

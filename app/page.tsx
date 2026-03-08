@@ -157,7 +157,7 @@ export default function Home() {
   <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
 
     {/* Logo */}
-    <div className="text-2xl font-bold">🍔 FriendshipZone</div>
+    <div className="text-2xl font-bold and italic">🍔 Nawala (نوالہ)</div>
 
     {/* Right Side Icons */}
     <div className="flex items-center gap-4">

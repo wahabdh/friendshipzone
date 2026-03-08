@@ -33,6 +33,8 @@ export default function Home() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [newItemForm, setNewItemForm] = useState({ name: '', price: '', description: '', image: '' });
   const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
+  const [customerName, setCustomerName] = useState('');
+  const [customerAddress, setCustomerAddress] = useState('');
 
   useEffect(() => {
     fetchMenuItems();
@@ -76,14 +78,20 @@ export default function Home() {
   };
 
   const sendWhatsAppMessage = (itemName?: string) => {
-    let message = "Hello! I'd like to order:\n";
+    let message = "";
     if (itemName) {
       message = `Hi, I'm interested in ordering ${itemName}.`;
     } else {
+      if (!customerName.trim() || !customerAddress.trim()) {
+        alert('Please enter your name and address');
+        return;
+      }
+      message = ` Name: ${customerName}\n Address: ${customerAddress}\n\n Order Details:\n`;
       cartItems.forEach(item => {
         message += `${item.name} x${item.quantity} (Rs. ${item.price * item.quantity})\n`;
       });
-      message += `\nTotal: Rs. ${cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0)}`;
+      const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+      message += `\n Total: Rs. ${total}`;
     }
     const encoded = encodeURIComponent(message);
     window.open(`https://wa.me/923069293923?text=${encoded}`, '_blank');
@@ -153,98 +161,57 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-pink-50">
       {/* Navbar */}
-<nav className="bg-red-600 text-white shadow-lg sticky top-0 z-50">
-  <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-
-    {/* Logo */}
-    <div className="text-2xl font-bold and italic">🍔 Nawala (نوالہ)</div>
-
-    {/* Right Side Icons */}
-    <div className="flex items-center gap-4">
-
-      {/* Cart Icon ALWAYS visible */}
-      {!adminToken && (
-        <button
-          onClick={() => setView('cart')}
-          className="relative hover:bg-red-700 p-2 rounded transition"
-        >
-          <ShoppingCart size={22} />
-          {cartCount > 0 && (
-            <span className="absolute -top-1 -right-1 bg-yellow-400 text-red-600 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
-              {cartCount}
-            </span>
-          )}
-        </button>
-      )}
-
-      {/* Mobile Menu Button */}
-      <button
-        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="md:hidden"
-      >
-        {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-      </button>
-
-      {/* Desktop Menu */}
-      <div className="hidden md:flex items-center gap-4">
-        {adminToken && (
-          <>
-            <button
-              onClick={() => setView('menu')}
-              className="hover:bg-red-700 px-3 py-2 rounded transition"
-            >
-              Menu
-            </button>
-
-            <button
-              onClick={() => setView('admin-dashboard')}
-              className="hover:bg-red-700 px-3 py-2 rounded transition"
-            >
-              Dashboard
-            </button>
-
-            <button
-              onClick={handleLogout}
-              className="hover:bg-red-700 px-3 py-2 rounded flex items-center gap-2 transition"
-            >
-              <LogOut size={20}/> Logout
-            </button>
-          </>
-        )}
-      </div>
-    </div>
-  </div>
-
-  {/* Mobile Dropdown Menu */}
-  {mobileMenuOpen && (
-    <div className="md:hidden bg-red-600 px-4 pb-4 flex flex-col gap-2">
-      {adminToken && (
-        <>
+      <nav className="bg-red-600 text-white shadow-lg sticky top-0 z-50">
+        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+          <div className="text-2xl font-bold and italic">🍔 Nawala (نوالہ)</div>
           <button
-            onClick={() => { setView('menu'); setMobileMenuOpen(false); }}
-            className="hover:bg-red-700 px-3 py-2 rounded transition text-left"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="md:hidden"
           >
-            Menu
+            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
           </button>
+          <div className={`${mobileMenuOpen ? 'flex' : 'hidden'} md:flex gap-4 flex-col md:flex-row w-full md:w-auto mt-4 md:mt-0 absolute md:static top-16 left-0 right-0 md:top-auto md:left-auto md:right-auto bg-red-600 md:bg-transparent p-4 md:p-0`}>
+            {adminToken && (
+              <>
+                <button
+                  onClick={() => { setView('menu'); setMobileMenuOpen(false); }}
+                  className="hover:bg-red-700 px-3 py-2 rounded transition"
+                >
+                  Menu
+                </button>
+                <button
+                  onClick={() => { setView('admin-dashboard'); setMobileMenuOpen(false); }}
+                  className="hover:bg-red-700 px-3 py-2 rounded transition"
+                >
+                  Dashboard
+                </button>
+              </>
+            )}
 
-          <button
-            onClick={() => { setView('admin-dashboard'); setMobileMenuOpen(false); }}
-            className="hover:bg-red-700 px-3 py-2 rounded transition text-left"
-          >
-            Dashboard
-          </button>
-
-          <button
-            onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
-            className="hover:bg-red-700 px-3 py-2 rounded flex items-center gap-2 transition"
-          >
-            <LogOut size={20}/> Logout
-          </button>
-        </>
-      )}
-    </div>
-  )}
-</nav>
+            {!adminToken && (
+              <button
+                onClick={() => { setView('cart'); setMobileMenuOpen(false); }}
+                className="hover:bg-red-700 px-3 py-2 rounded flex items-center gap-2 relative transition"
+              >
+                <ShoppingCart size={20} />
+                {cartCount > 0 && (
+                  <span className="bg-yellow-400 text-red-600 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+                    {cartCount}
+                  </span>
+                )}
+              </button>
+            )}
+            {adminToken && (
+              <button
+                onClick={handleLogout}
+                className="hover:bg-red-700 px-3 py-2 rounded flex items-center gap-2 transition"
+              >
+                <LogOut size={20} /> Logout
+              </button>
+            )}
+          </div>
+        </div>
+      </nav>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">
@@ -299,6 +266,30 @@ export default function Home() {
               </Card>
             ) : (
               <>
+                <Card className="p-6 bg-blue-50 border-2 border-blue-400 mb-8">
+                  <h2 className="text-xl font-bold text-gray-800 mb-4">📦 Delivery Information</h2>
+                  <div className="space-y-4">
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
+                      <Input
+                        value={customerName}
+                        onChange={(e) => setCustomerName(e.target.value)}
+                        placeholder="Enter your full name"
+                        className="w-full"
+                      />
+                    </div>
+                    <div>
+                      <label className="block text-sm font-medium text-gray-700 mb-2">Delivery Address</label>
+                      <Input
+                        value={customerAddress}
+                        onChange={(e) => setCustomerAddress(e.target.value)}
+                        placeholder="Enter your full address"
+                        className="w-full"
+                      />
+                    </div>
+                  </div>
+                </Card>
+
                 <div className="space-y-4 mb-8">
                   {cartItems.map(item => (
                     <Card key={item.id} className="p-4 flex items-center justify-between">

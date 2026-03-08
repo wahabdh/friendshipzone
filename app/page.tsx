@@ -153,57 +153,98 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-red-50 to-pink-50">
       {/* Navbar */}
-      <nav className="bg-red-600 text-white shadow-lg sticky top-0 z-50">
-        <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
-          <div className="text-2xl font-bold and italic">🍔 Nawala (نوالہ)</div>
-          <button
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-            className="md:hidden"
-          >
-            {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
-          </button>
-          <div className={`${mobileMenuOpen ? 'flex' : 'hidden'} md:flex gap-4 flex-col md:flex-row w-full md:w-auto mt-4 md:mt-0 absolute md:static top-16 left-0 right-0 md:top-auto md:left-auto md:right-auto bg-red-600 md:bg-transparent p-4 md:p-0`}>
-            {adminToken && (
-              <>
-                <button
-                  onClick={() => { setView('menu'); setMobileMenuOpen(false); }}
-                  className="hover:bg-red-700 px-3 py-2 rounded transition"
-                >
-                  Menu
-                </button>
-                <button
-                  onClick={() => { setView('admin-dashboard'); setMobileMenuOpen(false); }}
-                  className="hover:bg-red-700 px-3 py-2 rounded transition"
-                >
-                  Dashboard
-                </button>
-              </>
-            )}
+<nav className="bg-red-600 text-white shadow-lg sticky top-0 z-50">
+  <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
 
-            {view !== 'cart' && !adminToken && (
-              <button
-                onClick={() => { setView('cart'); setMobileMenuOpen(false); }}
-                className="hover:bg-red-700 px-3 py-2 rounded flex items-center gap-2 relative"
-              >
-                <ShoppingCart size={20} />
-                {cartCount > 0 && (
-                  <span className="bg-yellow-400 text-red-600 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
-                    {cartCount}
-                  </span>
-                )}
-              </button>
-            )}
-            {adminToken && (
-              <button
-                onClick={handleLogout}
-                className="hover:bg-red-700 px-3 py-2 rounded flex items-center gap-2 transition"
-              >
-                <LogOut size={20} /> Logout
-              </button>
-            )}
-          </div>
-        </div>
-      </nav>
+    {/* Logo */}
+    <div className="text-2xl font-bold">🍔 FriendshipZone</div>
+
+    {/* Right Side Icons */}
+    <div className="flex items-center gap-4">
+
+      {/* Cart Icon ALWAYS visible */}
+      {!adminToken && (
+        <button
+          onClick={() => setView('cart')}
+          className="relative hover:bg-red-700 p-2 rounded transition"
+        >
+          <ShoppingCart size={22} />
+          {cartCount > 0 && (
+            <span className="absolute -top-1 -right-1 bg-yellow-400 text-red-600 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
+              {cartCount}
+            </span>
+          )}
+        </button>
+      )}
+
+      {/* Mobile Menu Button */}
+      <button
+        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+        className="md:hidden"
+      >
+        {mobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+      </button>
+
+      {/* Desktop Menu */}
+      <div className="hidden md:flex items-center gap-4">
+        {adminToken && (
+          <>
+            <button
+              onClick={() => setView('menu')}
+              className="hover:bg-red-700 px-3 py-2 rounded transition"
+            >
+              Menu
+            </button>
+
+            <button
+              onClick={() => setView('admin-dashboard')}
+              className="hover:bg-red-700 px-3 py-2 rounded transition"
+            >
+              Dashboard
+            </button>
+
+            <button
+              onClick={handleLogout}
+              className="hover:bg-red-700 px-3 py-2 rounded flex items-center gap-2 transition"
+            >
+              <LogOut size={20}/> Logout
+            </button>
+          </>
+        )}
+      </div>
+    </div>
+  </div>
+
+  {/* Mobile Dropdown Menu */}
+  {mobileMenuOpen && (
+    <div className="md:hidden bg-red-600 px-4 pb-4 flex flex-col gap-2">
+      {adminToken && (
+        <>
+          <button
+            onClick={() => { setView('menu'); setMobileMenuOpen(false); }}
+            className="hover:bg-red-700 px-3 py-2 rounded transition text-left"
+          >
+            Menu
+          </button>
+
+          <button
+            onClick={() => { setView('admin-dashboard'); setMobileMenuOpen(false); }}
+            className="hover:bg-red-700 px-3 py-2 rounded transition text-left"
+          >
+            Dashboard
+          </button>
+
+          <button
+            onClick={() => { handleLogout(); setMobileMenuOpen(false); }}
+            className="hover:bg-red-700 px-3 py-2 rounded flex items-center gap-2 transition"
+          >
+            <LogOut size={20}/> Logout
+          </button>
+        </>
+      )}
+    </div>
+  )}
+</nav>
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 py-8">

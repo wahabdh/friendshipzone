@@ -4,6 +4,7 @@ import { useProductStore } from '@/store/productStore';
 import { formatCurrency } from '@/lib/formatters';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { AlertCircle, TrendingDown, Package } from 'lucide-react';
+import { StockAdjustmentForm } from '@/components/inventory/StockAdjustmentForm';
 
 export default function InventoryPage() {
   const products = useProductStore((state) => state.products);
@@ -16,9 +17,12 @@ export default function InventoryPage() {
   return (
     <div className="flex-1 overflow-auto">
       <div className="space-y-6 p-6">
-        <div>
-          <h1 className="text-3xl font-bold text-foreground">Inventory Management</h1>
-          <p className="text-muted-foreground mt-1">Track stock levels and inventory value</p>
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground">Inventory Management</h1>
+            <p className="text-muted-foreground mt-1">Track stock levels and inventory value</p>
+          </div>
+          <StockAdjustmentForm />
         </div>
 
         {/* Stats */}

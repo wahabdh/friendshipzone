@@ -1,378 +1,234 @@
 'use client';
 
-import { useState, useEffect } from 'react';
-import Link from 'next/link';
-import { ShoppingCart, LogOut, Menu, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card } from '@/components/ui/card';
-import { Input } from '@/components/ui/input';
+import { useEffect, useState } from 'react';
+import { useProductStore } from '@/store/productStore';
+import { useInvoiceStore } from '@/store/invoiceStore';
+import { useCustomerStore } from '@/store/customerStore';
+import { usePOSStore } from '@/store/posStore';
+import { formatCurrency, formatNumber } from '@/lib/formatters';
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from '@/components/ui/card';
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+} from 'recharts';
 
-interface MenuItem {
-  id: number;
-  name: string;
-  price: number;
-  description: string;
-  image: string;
+interface DashboardStats {
+  todaysSales: number;
+  totalCustomers: number;
+  lowStockCount: number;
+  totalInvoices: number;
 }
 
-interface CartItem {
-  id: number;
-  name: string;
-  price: number;
-  quantity: number;
-}
+export default function Dashboard() {
+  const [stats, setStats] = useState<DashboardStats>({
+    todaysSales: 0,
+    totalCustomers: 0,
+    lowStockCount: 0,
+    totalInvoices: 0,
+  });
 
-export default function Home() {
-  const [view, setView] = useState<'menu' | 'cart' | 'admin-login' | 'admin-dashboard'>('menu');
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [adminToken, setAdminToken] = useState<string | null>(null);
-  const [adminUsername, setAdminUsername] = useState('');
-  const [adminPassword, setAdminPassword] = useState('');
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [newItemForm, setNewItemForm] = useState({ name: '', price: '', description: '', image: '' });
-  const [editingItem, setEditingItem] = useState<MenuItem | null>(null);
-  const [customerName, setCustomerName] = useState('');
-  const [customerAddress, setCustomerAddress] = useState('');
+  const products = useProductStore((state) => state.products);
+  const customers = useCustomerStore((state) => state.customers);
+  const invoices = useInvoiceStore((state) => state.invoices);
+  const transactions = usePOSStore((state) => state.transactions);
 
   useEffect(() => {
-    fetchMenuItems();
-  }, []);
-
-  const fetchMenuItems = async () => {
-    try {
-      const res = await fetch('/api/menu');
-      const data = await res.json();
-      setMenuItems(data);
-    } catch (error) {
-      console.error('Failed to fetch menu:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const addToCart = (item: MenuItem) => {
-    const existing = cartItems.find(ci => ci.id === item.id);
-    if (existing) {
-      setCartItems(cartItems.map(ci =>
-        ci.id === item.id ? { ...ci, quantity: ci.quantity + 1 } : ci
-      ));
-    } else {
-      setCartItems([...cartItems, { id: item.id, name: item.name, price: item.price, quantity: 1 }]);
-    }
-  };
-
-  const removeFromCart = (id: number) => {
-    setCartItems(cartItems.filter(ci => ci.id !== id));
-  };
-
-  const updateCartQuantity = (id: number, quantity: number) => {
-    if (quantity <= 0) {
-      removeFromCart(id);
-    } else {
-      setCartItems(cartItems.map(ci =>
-        ci.id === id ? { ...ci, quantity } : ci
-      ));
-    }
-  };
-
-  const sendWhatsAppMessage = (itemName?: string) => {
-    let message = "";
-    if (itemName) {
-      message = `Hi, I'm interested in ordering ${itemName}.`;
-    } else {
-      if (!customerName.trim() || !customerAddress.trim()) {
-        alert('Please enter your name and address');
-        return;
-      }
-      message = `  Name: ${customerName}\n Address: ${customerAddress}\n\n Order Details:\n`;
-      cartItems.forEach(item => {
-        message += `${item.name} x${item.quantity} (Rs. ${item.price * item.quantity})\n`;
-      });
-      const total = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
-      message += `\n Total: Rs. ${total}`;
-    }
-    const encoded = encodeURIComponent(message);
-    window.open(`https://wa.me/923069293923?text=${encoded}`, '_blank');
-  };
-
-  const handleAdminLogin = async () => {
-    const res = await fetch('/api/auth', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ username: adminUsername, password: adminPassword })
+    // Calculate statistics
+    const lowStock = products.filter((p) => p.quantity <= p.reorderLevel).length;
+    const todayTransactions = transactions.filter((t) => {
+      const today = new Date();
+      return t.timestamp.toDateString() === today.toDateString();
     });
-    const data = await res.json();
-    if (data.success) {
-      setAdminToken(data.token);
-      setView('admin-dashboard');
-      setAdminUsername('');
-      setAdminPassword('');
-    } else {
-      alert('Invalid credentials');
-    }
-  };
+    const todaySales = todayTransactions.reduce((sum, t) => sum + t.totalAmount, 0);
 
-  const handleAddMenuItem = async () => {
-    if (!newItemForm.name || !newItemForm.price) return;
-    const newItem = {
-      name: newItemForm.name,
-      price: parseInt(newItemForm.price),
-      description: newItemForm.description,
-      image: newItemForm.image || '/placeholder.jpg'
-    };
-    const res = await fetch('/api/menu', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(newItem)
+    setStats({
+      todaysSales: todaySales,
+      totalCustomers: customers.length,
+      lowStockCount: lowStock,
+      totalInvoices: invoices.length,
     });
-    const data = await res.json();
-    setMenuItems([...menuItems, data]);
-    setNewItemForm({ name: '', price: '', description: '', image: '' });
-  };
+  }, [products, customers, invoices, transactions]);
 
-  const handleUpdateMenuItem = async () => {
-    if (!editingItem) return;
-    const res = await fetch('/api/menu', {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(editingItem)
-    });
-    const data = await res.json();
-    setMenuItems(menuItems.map(m => m.id === data.id ? data : m));
-    setEditingItem(null);
-  };
+  // Sample chart data
+  const salesData = [
+    { date: 'Mon', sales: 1200 },
+    { date: 'Tue', sales: 1900 },
+    { date: 'Wed', sales: 1600 },
+    { date: 'Thu', sales: 2200 },
+    { date: 'Fri', sales: 2800 },
+    { date: 'Sat', sales: 2400 },
+    { date: 'Sun', sales: 1800 },
+  ];
 
-  const handleDeleteMenuItem = async (id: number) => {
-    if (!confirm('Delete this item?')) return;
-    await fetch(`/api/menu?id=${id}`, { method: 'DELETE' });
-    setMenuItems(menuItems.filter(m => m.id !== id));
-  };
+  const categoryData = [
+    { name: 'Electronics', value: 35 },
+    { name: 'Accessories', value: 45 },
+    { name: 'Furniture', value: 20 },
+  ];
 
-  const handleLogout = () => {
-    setAdminToken(null);
-    setView('menu');
-  };
-
-  const cartCount = cartItems.reduce((sum, item) => sum + item.quantity, 0);
-  const cartTotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
+  const COLORS = ['#2563eb', '#60a5fa', '#93c5fd'];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-pink-50">
-      {/* Navbar */}
-<nav className="bg-red-600 text-white shadow-lg sticky top-0 z-50">
+    <div className="flex-1 overflow-auto">
+      <div className="space-y-6 p-6">
+        {/* Header */}
+        <div>
+          <h1 className="text-3xl font-bold text-foreground">Dashboard</h1>
+          <p className="text-muted-foreground mt-1">
+            Welcome to your shop management system
+          </p>
+        </div>
 
-  <div className="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+        {/* Stats Cards */}
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium">Today&apos;s Sales</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">
+                {formatCurrency(stats.todaysSales)}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">
+                {transactions.length} transactions
+              </p>
+            </CardContent>
+          </Card>
 
-    {/* Logo */}
-    <div className="text-2xl font-bold italic">
-      🍔 Nawala (نوالہ)
-    </div>
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium">Total Customers</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalCustomers}</div>
+              <p className="text-xs text-muted-foreground mt-1">Active customers</p>
+            </CardContent>
+          </Card>
 
-    {/* Right side icons */}
-    <div className="flex items-center gap-4">
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium">Low Stock Items</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-orange-600">
+                {stats.lowStockCount}
+              </div>
+              <p className="text-xs text-muted-foreground mt-1">Need reordering</p>
+            </CardContent>
+          </Card>
 
-      {/* Cart icon always visible */}
-      {!adminToken && (
-        <button
-          onClick={() => setView('cart')}
-          className="relative hover:bg-red-700 p-2 rounded transition"
-        >
-          <ShoppingCart size={22} />
+          <Card>
+            <CardHeader className="pb-3">
+              <CardTitle className="text-sm font-medium">Total Invoices</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold">{stats.totalInvoices}</div>
+              <p className="text-xs text-muted-foreground mt-1">All time</p>
+            </CardContent>
+          </Card>
+        </div>
 
-          {cartCount > 0 && (
-            <span className="absolute -top-2 -right-2 bg-yellow-400 text-red-700 rounded-full w-5 h-5 flex items-center justify-center text-xs font-bold">
-              {cartCount}
-            </span>
-          )}
-        </button>
-      )}
+        {/* Charts */}
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+          <Card className="lg:col-span-2">
+            <CardHeader>
+              <CardTitle>Weekly Sales</CardTitle>
+              <CardDescription>Sales trend over the past week</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <LineChart data={salesData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip formatter={(value) => formatCurrency(value as number)} />
+                  <Legend />
+                  <Line
+                    type="monotone"
+                    dataKey="sales"
+                    stroke="#2563eb"
+                    strokeWidth={2}
+                    dot={{ fill: '#2563eb', r: 4 }}
+                  />
+                </LineChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
 
-      {/* Mobile menu button */}
-      <button
-        onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        className="md:hidden"
-      >
-        {mobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
-      </button>
+          <Card>
+            <CardHeader>
+              <CardTitle>Sales by Category</CardTitle>
+              <CardDescription>Distribution of sales</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <ResponsiveContainer width="100%" height={300}>
+                <PieChart>
+                  <Pie
+                    data={categoryData}
+                    cx="50%"
+                    cy="50%"
+                    labelLine={false}
+                    label={({ name, value }) => `${name}: ${value}%`}
+                    outerRadius={80}
+                    fill="#8884d8"
+                    dataKey="value"
+                  >
+                    {categoryData.map((entry, index) => (
+                      <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
+                    ))}
+                  </Pie>
+                  <Tooltip />
+                </PieChart>
+              </ResponsiveContainer>
+            </CardContent>
+          </Card>
+        </div>
 
-    </div>
-
-  </div>
-
-  {/* Mobile Menu */}
-  {mobileMenuOpen && (
-    <div className="md:hidden bg-red-600 px-4 pb-4 space-y-2">
-
-      {adminToken && (
-        <>
-          <button
-            onClick={() => { setView('menu'); setMobileMenuOpen(false); }}
-            className="block w-full text-left hover:bg-red-700 px-3 py-2 rounded"
-          >
-            Menu
-          </button>
-
-          <button
-            onClick={() => { setView('admin-dashboard'); setMobileMenuOpen(false); }}
-            className="block w-full text-left hover:bg-red-700 px-3 py-2 rounded"
-          >
-            Dashboard
-          </button>
-
-          <button
-            onClick={() => { setAdminToken(null); setMobileMenuOpen(false); }}
-            className="flex items-center gap-2 hover:bg-red-700 px-3 py-2 rounded"
-          >
-            <LogOut size={18} /> Logout
-          </button>
-        </>
-      )}
-
-    </div>
-  )}
-</nav>
-
-      {/* Main Content */}
-      <div className="max-w-7xl mx-auto px-4 py-8">
-        {/* Menu View */}
-        {view === 'menu' && (
-          <div>
-            <h1 className="text-4xl font-bold text-red-600 mb-8">Our Menu</h1>
-            {loading ? (
-              <div className="text-center py-12">Loading menu...</div>
-            ) : (
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                {menuItems.map(item => (
-                  <Card key={item.id} className="overflow-hidden hover:shadow-xl transition transform hover:scale-105">
-                    <img 
-                      src={item.image} 
-                      alt={item.name}
-                      className="w-full h-48 object-cover bg-gray-200"
-                    />
-                    <div className="p-6">
-                      <h3 className="text-xl font-bold text-gray-800">{item.name}</h3>
-                      <p className="text-gray-600 text-sm mt-2">{item.description}</p>
-                      <div className="flex items-center justify-between mt-4">
-                        <span className="text-2xl font-bold text-red-600">Rs. {item.price}</span>
-                        <Button
-                          onClick={() => addToCart(item)}
-                          className="bg-red-600 hover:bg-red-700 text-white"
-                        >
-                          Add to Cart
-                        </Button>
-                      </div>
+        {/* Recent Activity */}
+        <div className="grid grid-cols-1 gap-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Top Products</CardTitle>
+              <CardDescription>Best performing products</CardDescription>
+            </CardHeader>
+            <CardContent>
+              <div className="space-y-4">
+                {products.slice(0, 5).map((product) => (
+                  <div key={product.id} className="flex items-center justify-between">
+                    <div>
+                      <p className="font-medium">{product.name}</p>
+                      <p className="text-sm text-muted-foreground">
+                        Stock: {product.quantity}
+                      </p>
                     </div>
-                  </Card>
+                    <div className="text-right">
+                      <p className="font-medium">
+                        {formatCurrency(product.sellingPrice)}
+                      </p>
+                    </div>
+                  </div>
                 ))}
               </div>
-            )}
-          </div>
-        )}
-
-        {/* Cart View */}
-        {view === 'cart' && (
-          <div className="max-w-2xl mx-auto">
-            <h1 className="text-3xl font-bold text-red-600 mb-8">Shopping Cart</h1>
-            {cartItems.length === 0 ? (
-              <Card className="p-8 text-center">
-                <p className="text-gray-600 text-lg">Your cart is empty</p>
-                <Button
-                  onClick={() => setView('menu')}
-                  className="mt-4 bg-red-600 hover:bg-red-700 text-white"
-                >
-                  Continue Shopping
-                </Button>
-              </Card>
-            ) : (
-              <>
-                <Card className="p-6 bg-blue-50 border-2 border-blue-400 mb-8">
-                  <h2 className="text-xl font-bold text-gray-800 mb-4">📦 Delivery Information</h2>
-                  <div className="space-y-4">
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
-                      <Input
-                        value={customerName}
-                        onChange={(e) => setCustomerName(e.target.value)}
-                        placeholder="Enter your full name"
-                        className="w-full"
-                      />
-                    </div>
-                    <div>
-                      <label className="block text-sm font-medium text-gray-700 mb-2">Delivery Address</label>
-                      <Input
-                        value={customerAddress}
-                        onChange={(e) => setCustomerAddress(e.target.value)}
-                        placeholder="Enter your full address"
-                        className="w-full"
-                      />
-                    </div>
-                  </div>
-                </Card>
-
-                <div className="space-y-4 mb-8">
-                  {cartItems.map(item => (
-                    <Card key={item.id} className="p-4 flex items-center justify-between">
-                      <div>
-                        <h3 className="font-bold text-gray-800">{item.name}</h3>
-                        <p className="text-gray-600">Rs. {item.price} each</p>
-                      </div>
-                      <div className="flex items-center gap-4">
-                        <div className="flex items-center gap-2">
-                          <button
-                            onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
-                            className="bg-gray-300 hover:bg-gray-400 px-2 py-1 rounded"
-                          >
-                            -
-                          </button>
-                          <span className="w-8 text-center font-bold">{item.quantity}</span>
-                          <button
-                            onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
-                            className="bg-gray-300 hover:bg-gray-400 px-2 py-1 rounded"
-                          >
-                            +
-                          </button>
-                        </div>
-                        <span className="font-bold text-red-600 w-20 text-right">
-                          Rs. {item.price * item.quantity}
-                        </span>
-                        <button
-                          onClick={() => removeFromCart(item.id)}
-                          className="bg-red-600 hover:bg-red-700 text-white px-3 py-1 rounded"
-                        >
-                          Remove
-                        </button>
-                      </div>
-                    </Card>
-                  ))}
-                </div>
-                <Card className="p-6 bg-red-50 border-2 border-red-600">
-                  <div className="flex justify-between items-center mb-6">
-                    <span className="text-xl font-bold text-gray-800">Total:</span>
-                    <span className="text-3xl font-bold text-red-600">Rs. {cartTotal}</span>
-                  </div>
-                  <div className="flex gap-4">
-                    <Button
-                      onClick={() => setView('menu')}
-                      className="flex-1 bg-gray-600 hover:bg-gray-700 text-white"
-                    >
-                      Continue Shopping
-                    </Button>
-                    <Button
-                      onClick={() => sendWhatsAppMessage()}
-                      className="flex-1 bg-green-600 hover:bg-green-700 text-white"
-                    >
-                      Order on WhatsApp
-                    </Button>
-                  </div>
-                </Card>
-              </>
-            )}
-          </div>
-        )}
-
-
+            </CardContent>
+          </Card>
+        </div>
       </div>
     </div>
   );

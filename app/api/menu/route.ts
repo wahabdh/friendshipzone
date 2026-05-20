@@ -4,7 +4,7 @@ let menuItems = [
     name: "Chicken Samosa",
     price: 700,
     description: "Fresh Chicken Samosa",
-    image: "/menu-items/Samosa Roll.jpg"
+    image: "/menu-items/Chicken Samosa.jpg"
   },
   {
     id: 2,

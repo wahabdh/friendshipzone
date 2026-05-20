@@ -539,7 +539,7 @@ export default function Home() {
 
                 <div className="flex items-center gap-2">
                   <Phone size={18} />
-                  +92 306 9293923
+                  0306-9293923/ 0317-5012196
                 </div>
 
                 <div className="flex items-center gap-2">

@@ -43,10 +43,10 @@ let menuItems = [
   },
   {
     id: 6,
-    name: "Kharai",
+    name: "Tikka Roll",
     price: 380,
-    description: "Fragrant rice with tender meat pieces",
-    image: "/menu-items/biryani.jpg"
+    description: "Fresh Tikka Roll",
+    image: "/menu-items/Tikka Roll.jpg"
   }
 ];
 

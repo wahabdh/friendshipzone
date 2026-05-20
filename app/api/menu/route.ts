@@ -8,10 +8,10 @@ let menuItems = [
   },
   {
     id: 2,
-    name: "Spicy Chicken Wrap",
-    price: 280,
-    description: "Tender chicken with spicy sauce and veggies",
-    image: "/menu-items/chicken-wrap.jpg"
+    name: "Beef Shahmi Kabaab",
+    price: 1200,
+    description: "Fresh Beef Shahmi Kabaab",
+    image: "/menu-items/Beef Shahmi Kabaab.jpg"
   },
   {
     id: 3,

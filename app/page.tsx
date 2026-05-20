@@ -159,7 +159,7 @@ export default function Home() {
   const cartTotal = cartItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-red-50 to-pink-50">
+    <div className="min-h-screen bg-gray-100">
       {/* Navbar */}
 <nav className="bg-red-600 text-white shadow-lg sticky top-0 z-50">
 
@@ -245,26 +245,41 @@ export default function Home() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {menuItems.map(item => (
-                  <Card key={item.id} className="overflow-hidden hover:shadow-xl transition transform hover:scale-105">
-                    <img 
-                      src={item.image} 
-                      alt={item.name}
-                      className="w-full h-48 object-cover bg-gray-200"
-                    />
-                    <div className="p-6">
-                      <h3 className="text-xl font-bold text-gray-800">{item.name}</h3>
-                      <p className="text-gray-600 text-sm mt-2">{item.description}</p>
-                      <div className="flex items-center justify-between mt-4">
-                        <span className="text-2xl font-bold text-red-600">Rs. {item.price}</span>
-                        <Button
-                          onClick={() => addToCart(item)}
-                          className="bg-red-600 hover:bg-red-700 text-white"
-                        >
-                          Add to Cart
-                        </Button>
-                      </div>
-                    </div>
-                  </Card>
+                 <Card className="group relative overflow-hidden rounded-2xl border-0 shadow-lg hover:shadow-2xl transition-all duration-500">
+
+  {/* Image */}
+  <img
+    src={item.image}
+    alt={item.name}
+    className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110"
+  />
+
+  {/* Overlay */}
+  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
+
+    <h3 className="text-2xl font-bold text-white mb-2">
+      {item.name}
+    </h3>
+
+    <p className="text-gray-200 text-sm mb-4 line-clamp-2">
+      {item.description}
+    </p>
+
+    <div className="flex items-center justify-between">
+      <span className="text-2xl font-bold text-yellow-400">
+        Rs. {item.price}
+      </span>
+
+      <Button
+        onClick={() => addToCart(item)}
+        className="bg-red-600 hover:bg-red-700 text-white"
+      >
+        Add to Cart
+      </Button>
+    </div>
+
+  </div>
+</Card>
                 ))}
               </div>
             )}

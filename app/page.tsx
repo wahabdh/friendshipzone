@@ -245,7 +245,7 @@ export default function Home() {
             ) : (
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                 {menuItems.map(item => (
-                 <Card className="group relative overflow-hidden rounded-2xl border-0 shadow-lg hover:shadow-2xl transition-all duration-500">
+            <Card className="group relative overflow-hidden rounded-2xl border-0 shadow-lg hover:shadow-2xl transition-all duration-500">
 
   {/* Image */}
   <img
@@ -254,12 +254,29 @@ export default function Home() {
     className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110"
   />
 
-  {/* Overlay */}
-  <div className="  absolute inset-0 bg-black/60  opacity-100 md:opacity-0  md:group-hover:opacity-100  transition-all duration-500  flex flex-col justify-end p-6">
+  {/* Always Visible Title */}
+  <h3 className="
+    absolute top-4 left-1/2 -translate-x-1/2
+    bg-black/70 backdrop-blur-sm
+    text-white text-lg md:text-xl
+    font-bold
+    px-4 py-2
+    rounded-full
+    shadow-lg
+    z-10
+  ">
+    {item.name}
+  </h3>
 
-    <h3 className="text-2xl font-bold text-white mb-2">
-      {item.name}
-    </h3>
+  {/* Hover Overlay */}
+  <div className="
+    absolute inset-0
+    bg-black/60
+    opacity-100 md:opacity-0
+    md:group-hover:opacity-100
+    transition-all duration-500
+    flex flex-col justify-end p-6
+  ">
 
     <p className="text-gray-200 text-sm mb-4 line-clamp-2">
       {item.description}

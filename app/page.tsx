@@ -255,6 +255,20 @@ export default function Home() {
   />
 
   {/* Always Visible Title */}
+ <h3 className="
+  absolute inset-0
+  flex items-center justify-center
+  text-white text-xl md:text-2xl
+  font-bold
+  z-10
+  pointer-events-none
+  text-center
+">
+  <span className="bg-black/60 px-4 py-2 rounded-lg backdrop-blur-sm">
+    {item.name}
+  </span>
+</h3>
+
  <div className="
   absolute inset-0
   bg-black/60

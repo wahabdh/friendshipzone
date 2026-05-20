@@ -255,7 +255,7 @@ export default function Home() {
   />
 
   {/* Overlay */}
-  <div className="absolute inset-0 bg-black/60 opacity-0 group-hover:opacity-100 transition-all duration-500 flex flex-col justify-end p-6">
+  <div className="  absolute inset-0 bg-black/60  opacity-100 md:opacity-0  md:group-hover:opacity-100  transition-all duration-500  flex flex-col justify-end p-6">
 
     <h3 className="text-2xl font-bold text-white mb-2">
       {item.name}

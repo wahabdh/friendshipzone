@@ -254,63 +254,88 @@ export default function Home() {
     className="w-full h-72 object-cover transition-transform duration-500 group-hover:scale-110"
   />
 
-  {/* Always Visible Title */}
-<h3 className="
-  absolute inset-0
-  flex items-center justify-center
-  text-white text-xl md:text-2xl
-  font-bold
-  z-10
-  pointer-events-none
-  text-center
-  opacity-100 group-hover:opacity-0
-  transition-opacity duration-300
-">
-  <span className="bg-black/60 px-4 py-2 rounded-lg backdrop-blur-sm">
-    {item.name}
-  </span>
-</h3>
-
- <div className="
-  absolute inset-0
-  bg-black/60
-  opacity-100 md:opacity-0
-  md:group-hover:opacity-100
-  transition-all duration-500
-  flex flex-col justify-end p-6
-">
-  
-  {/* TITLE (only on hover) */}
+  {/* TOP TITLE (Desktop only, disappears on hover) */}
   <h3 className="
-    text-white text-lg md:text-xl
+    absolute inset-0
+    flex items-center justify-center
+    text-white text-xl md:text-2xl
     font-bold
-    mb-2
-    opacity-0 md:opacity-100 md:group-hover:opacity-100
-    transition-all duration-300
+    z-10
+    pointer-events-none
+    text-center
+    opacity-100
+    md:group-hover:opacity-0
+    transition-opacity duration-300
   ">
-    {item.name}
+    <span className="bg-black/60 px-4 py-2 rounded-lg backdrop-blur-sm">
+      {item.name}
+    </span>
   </h3>
 
-  {/* DESCRIPTION */}
-  <p className="text-gray-200 text-sm mb-4 line-clamp-2">
-    {item.description}
-  </p>
+  {/* DESKTOP HOVER OVERLAY ONLY */}
+  <div className="
+    hidden md:flex
+    absolute inset-0
+    bg-black/60
+    opacity-0
+    group-hover:opacity-100
+    transition-all duration-500
+    flex-col justify-end p-6
+  ">
 
-  {/* PRICE + BUTTON */}
-  <div className="flex items-center justify-between">
-    <span className="text-2xl font-bold text-yellow-400">
-      Rs. {item.price}
-    </span>
+    <h3 className="text-white text-xl font-bold mb-2">
+      {item.name}
+    </h3>
 
-    <Button
-      onClick={() => addToCart(item)}
-      className="bg-red-600 hover:bg-red-700 text-white"
-    >
-      Add to Cart
-    </Button>
+    <p className="text-gray-200 text-sm mb-4 line-clamp-2">
+      {item.description}
+    </p>
+
+    <div className="flex items-center justify-between">
+      <span className="text-2xl font-bold text-yellow-400">
+        Rs. {item.price}
+      </span>
+
+      <Button
+        onClick={() => addToCart(item)}
+        className="bg-red-600 hover:bg-red-700 text-white"
+      >
+        Add to Cart
+      </Button>
+    </div>
+
   </div>
 
-</div>
+  {/* MOBILE BOTTOM INFO (always visible, NO overlay) */}
+  <div className="
+    md:hidden
+    absolute bottom-0 left-0 right-0
+    bg-black/60
+    p-3
+  ">
+    <h3 className="text-white text-sm font-bold">
+      {item.name}
+    </h3>
+
+    <p className="text-gray-200 text-xs line-clamp-1">
+      {item.description}
+    </p>
+
+    <div className="flex items-center justify-between mt-1">
+      <span className="text-yellow-400 font-bold text-sm">
+        Rs. {item.price}
+      </span>
+
+      <Button
+        size="sm"
+        onClick={() => addToCart(item)}
+        className="bg-red-600 hover:bg-red-700 text-white text-xs px-2 py-1"
+      >
+        Add
+      </Button>
+    </div>
+  </div>
+
 </Card>
                 ))}
               </div>

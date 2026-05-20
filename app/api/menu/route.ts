@@ -36,10 +36,10 @@ let menuItems = [
   },
   {
     id: 6,
-    name: "Biryani Special",
-    price: 380,
-    description: "Fragrant rice with tender meat pieces",
-    image: "/menu-items/biryani.jpg"
+    name: "Spring Roll",
+    price: 1000,
+    description: "Fresh Spring Roll",
+    image: "/menu-items/Spring Roll.jpg"
   },
   {
     id: 6,

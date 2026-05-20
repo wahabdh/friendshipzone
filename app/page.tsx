@@ -255,48 +255,46 @@ export default function Home() {
   />
 
   {/* Always Visible Title */}
- <h3 className="
+ <div className="
   absolute inset-0
-  flex items-center justify-center
-  text-white text-xl md:text-2xl
-  font-bold
-  z-10
-  pointer-events-none
-  text-center
+  bg-black/60
+  opacity-100 md:opacity-0
+  md:group-hover:opacity-100
+  transition-all duration-500
+  flex flex-col justify-end p-6
 ">
-  <span className="bg-black/60 px-4 py-2 rounded-lg backdrop-blur-sm">
-    {item.name}
-  </span>
-</h3>
-
-  {/* Hover Overlay */}
-  <div className="
-    absolute inset-0
-    bg-black/60
-    opacity-100 md:opacity-0
-    md:group-hover:opacity-100
-    transition-all duration-500
-    flex flex-col justify-end p-6
+  
+  {/* TITLE (only on hover) */}
+  <h3 className="
+    text-white text-lg md:text-xl
+    font-bold
+    mb-2
+    opacity-0 md:opacity-100 md:group-hover:opacity-100
+    transition-all duration-300
   ">
+    {item.name}
+  </h3>
 
-    <p className="text-gray-200 text-sm mb-4 line-clamp-2">
-      {item.description}
-    </p>
+  {/* DESCRIPTION */}
+  <p className="text-gray-200 text-sm mb-4 line-clamp-2">
+    {item.description}
+  </p>
 
-    <div className="flex items-center justify-between">
-      <span className="text-2xl font-bold text-yellow-400">
-        Rs. {item.price}
-      </span>
+  {/* PRICE + BUTTON */}
+  <div className="flex items-center justify-between">
+    <span className="text-2xl font-bold text-yellow-400">
+      Rs. {item.price}
+    </span>
 
-      <Button
-        onClick={() => addToCart(item)}
-        className="bg-red-600 hover:bg-red-700 text-white"
-      >
-        Add to Cart
-      </Button>
-    </div>
-
+    <Button
+      onClick={() => addToCart(item)}
+      className="bg-red-600 hover:bg-red-700 text-white"
+    >
+      Add to Cart
+    </Button>
   </div>
+
+</div>
 </Card>
                 ))}
               </div>

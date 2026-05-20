@@ -300,7 +300,7 @@ export default function Home() {
             )}
 
             <h1 className="text-4xl font-bold text-red-600 mb-8">
-              Home Made Taste, Bilkul Ghar Jaisa
+              Home Made Taste, بلکل گھر جیسا
             </h1>
 
             {loading ? (

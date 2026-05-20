@@ -272,7 +272,7 @@ export default function Home() {
     </span>
   </h3>
 
-  {/* DESKTOP HOVER OVERLAY ONLY */}
+  {/* DESKTOP HOVER OVERLAY ONLY (FIXED: hidden on mobile) */}
   <div className="
     hidden md:flex
     absolute inset-0
@@ -306,7 +306,7 @@ export default function Home() {
 
   </div>
 
-  {/* MOBILE BOTTOM INFO (always visible, NO overlay) */}
+  {/* MOBILE BOTTOM INFO ONLY (NO OVERLAY) */}
   <div className="
     md:hidden
     absolute bottom-0 left-0 right-0

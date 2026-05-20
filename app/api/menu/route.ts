@@ -42,11 +42,18 @@ let menuItems = [
     image: "/menu-items/Spring Roll.jpg"
   },
   {
-    id: 6,
+    id: 7,
     name: "Tikka Roll",
-    price: 380,
+    price: 1000,
     description: "Fresh Tikka Roll",
     image: "/menu-items/Tikka Roll.jpg"
+  },
+  {
+    id: 8,
+    name: "Cheese Roll Large",
+    price: 1800,
+    description: "Fresh Cheese Roll large size",
+    image: "/menu-items/Cheese Roll.jpg"
   }
 ];
 

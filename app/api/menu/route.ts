@@ -40,6 +40,13 @@ let menuItems = [
     price: 380,
     description: "Fragrant rice with tender meat pieces",
     image: "/menu-items/biryani.jpg"
+  },
+  {
+    id: 6,
+    name: "Kharai",
+    price: 380,
+    description: "Fragrant rice with tender meat pieces",
+    image: "/menu-items/biryani.jpg"
   }
 ];
 

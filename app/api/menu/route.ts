@@ -15,10 +15,10 @@ let menuItems = [
   },
   {
     id: 3,
-    name: "Margherita Pizza",
-    price: 350,
-    description: "Classic pizza with mozzarella and basil",
-    image: "/menu-items/pizza.jpg"
+    name: "Pizza Roll",
+    price: 1500,
+    description: "Classic pizza Roll",
+    image: "/menu-items/Pizza Roll.jpg"
   },
    {
     id: 4,

@@ -1,9 +1,9 @@
 let menuItems = [
   {
     id: 1,
-    name: "Samosa Roll",
-    price: 1150,
-    description: "Fresh veggie patty with lettuce and tomato",
+    name: "Chicken Samosa",
+    price: 700,
+    description: "Fresh Chicken Samosa",
     image: "/menu-items/Samosa Roll.jpg"
   },
   {

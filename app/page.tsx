@@ -226,7 +226,7 @@ export default function Home() {
                               className="w-full h-full object-cover"
                             />
 
-                            <div className="absolute inset-0 bg-black/50 flex flex-col justify-between p-8">
+                            <div className="absolute inset-0 flex flex-col justify-between p-8">
 
                               <div>
                                 <span className="inline-block bg-yellow-400 text-red-700 px-4 py-1 rounded-full font-bold text-sm mb-4">

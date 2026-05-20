@@ -81,7 +81,7 @@ let menuItems = [
     name: "Chicken Lolly Pops",
     price: 1000,
     description: "12 Pcs Fresh & home made items",
-    image: "/menu-items/Chicken Cheese Lolly Pops.jpg"
+    image: "/menu-items/Chicken Lolly Pops.jpg"
   }
 ];
 

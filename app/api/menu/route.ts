@@ -8,10 +8,10 @@ let menuItems = [
   },
   {
     id: 2,
-    name: "Beef Shahmi Kabaab",
+    name: "Beef Shami Kabab",
     price: 1200,
     description: "12 Pcs Fresh & home made items",
-    image: "/menu-items/Beef Shahmi Kabaab.jpg"
+    image: "/menu-items/Beef Shami Kabab.jpg"
   },
   {
     id: 3,

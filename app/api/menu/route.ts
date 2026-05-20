@@ -78,7 +78,7 @@ let menuItems = [
   },
     {
     id: 12,
-    name: "Chicken Cheese Lolly Pops",
+    name: "Chicken Lolly Pops",
     price: 1000,
     description: "12 Pcs Fresh & home made items",
     image: "/menu-items/Chicken Cheese Lolly Pops.jpg"

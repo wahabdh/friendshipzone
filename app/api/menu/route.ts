@@ -22,10 +22,10 @@ let menuItems = [
   },
    {
     id: 4,
-    name: "Paneer Tikka",
-    price: 320,
-    description: "Grilled paneer with aromatic spices",
-    image: "/menu-items/paneer-tikka.jpg"
+    name: "Chicken Seekh Kabab",
+    price: 1000,
+    description: "Fresh Chicken Seekh Kabab",
+    image: "/menu-items/Chicken Seekh Kabab.jpg"
   },
   {
     id: 5,

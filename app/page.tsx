@@ -268,7 +268,7 @@ export default function Home() {
   md:group-hover:opacity-0
   transition-opacity duration-300
 ">
-    <span className="bg-black/60 px-4 py-2 rounded-lg backdrop-blur-sm">
+    <span className="bg-black/80 px-4 py-2 rounded-lg backdrop-blur-sm">
       {item.name}
     </span>
   </h3>

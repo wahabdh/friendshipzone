@@ -544,7 +544,7 @@ export default function Home() {
 
                 <div className="flex items-center gap-2">
                   <Mail size={18} />
-                  info@nawala.pk
+                  wahabdhamraya@gmail.com
                 </div>
 
               </div>

@@ -255,18 +255,19 @@ export default function Home() {
   />
 
   {/* TOP TITLE (Desktop only, disappears on hover) */}
-  <h3 className="
-    absolute inset-0
-    flex items-center justify-center
-    text-white text-xl md:text-2xl
-    font-bold
-    z-10
-    pointer-events-none
-    text-center
-    opacity-100
-    md:group-hover:opacity-0
-    transition-opacity duration-300
-  ">
+ <h3 className="
+  hidden md:flex
+  absolute inset-0
+  items-center justify-center
+  text-white text-xl md:text-2xl
+  font-bold
+  z-10
+  pointer-events-none
+  text-center
+  opacity-100
+  md:group-hover:opacity-0
+  transition-opacity duration-300
+">
     <span className="bg-black/60 px-4 py-2 rounded-lg backdrop-blur-sm">
       {item.name}
     </span>

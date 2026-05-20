@@ -29,10 +29,10 @@ let menuItems = [
   },
   {
     id: 5,
-    name: "Fries special",
-    price: 320,
-    description: "Grilled paneer with aromatic spices",
-    image: "/menu-items/fries.jpg"
+    name: "Chicken Shami Kabab",
+    price: 1000,
+    description: "Fresh Chicken Shami Kabab",
+    image: "/menu-items/Chicken Shami Kabab.jpg"
   },
   {
     id: 6,

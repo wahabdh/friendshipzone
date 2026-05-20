@@ -239,7 +239,7 @@ export default function Home() {
         {/* Menu View */}
         {view === 'menu' && (
           <div>
-            <h1 className="text-4xl font-bold text-red-600 mb-8">Home Made Taste, Bilkul Maa Ke Haath Jaisa</h1>
+            <h1 className="text-4xl font-bold text-red-600 mb-8">Home Made Taste, Bilkul Ghar Jaisa</h1>
             {loading ? (
               <div className="text-center py-12">Loading menu...</div>
             ) : (
